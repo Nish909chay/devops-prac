@@ -1,0 +1,28 @@
+name: CI
+on: # trigger
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:   # collection of steps
+    build-and-test: # name of the JOB
+        runs-on: ubuntu-latest  # runnner
+        # when push -> GitHub creates a new ubuntu-VM -> new machine after every push - hence non-persistent
+        steps:  # jobs are made of steps
+            - uses: actions/checkout@v4    
+                # this command downloads your repository onto the runner.
+                # clones the repo onto the runner
+                # without this your runner is an empty machine
+
+            - name: set up Python
+              uses: actions/setup-python@v5  # installs python on runner
+              with: # like an argument to a func() - this is arg for action
+                python-version: "3.11"
+            
+            - name: Install Dependencies
+              run: pip install -r requirements.txt
+              # Execute the following shell command on the runner.
+
+            - name: Run Tests
+              run: pytest
