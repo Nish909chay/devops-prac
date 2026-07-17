@@ -26,3 +26,13 @@ jobs:   # collection of steps
 
             - name: Run Tests
               run: pytest
+    
+    docker-build:
+        needs: build-and-test   # Do not start docker-build until build-and-test succeeds.
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Build Docker image
+              run: docker build -t devops-demo:${{ github.sha }} .
