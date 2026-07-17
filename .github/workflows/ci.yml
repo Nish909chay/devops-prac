@@ -36,3 +36,24 @@ jobs:   # collection of steps
 
             - name: Build Docker image
               run: docker build -t devops-demo:${{ github.sha }} .
+# GitHub replaces it with the SHA (unique commit ID) of the commit that triggered the workflow.
+
+    docker-push:
+        needs: docker-build
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                push: true  
+                # Push it to the registry.
+                tags: nish94545/devops-demo:latest
